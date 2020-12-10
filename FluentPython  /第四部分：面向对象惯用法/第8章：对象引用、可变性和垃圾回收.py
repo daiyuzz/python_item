@@ -114,20 +114,92 @@ class TwilightBus:
 
     def __init__(self, passengers=None):
         if passengers is None:
-            self.passengers = []
+            self.passengers = []  # 这里谨慎处理，当passengers 为None时，创建一个新的空列表
         else:
-            self.passengers = passengers
+            self.passengers = passengers  # 这个赋值语句把 self.passengers 变成 passengers 的别名，而后者是传给 __init__ 方法的实参
 
     def pick(self, name):
         self.passengers.append(name)
 
     def drop(self, name):
-        self.passengers.remove(name)
+        self.passengers.remove(name)  # 在self.passengers 上调用 .remove() 和 .append() 方法其实会修改传给构造方法的那个列表
 
 
 basketball_team = ['Sue', 'Tina', "Maya", 'Diana', 'Pat']
 bus = TwilightBus(basketball_team)
 bus.drop('Tina')
 bus.drop('Pat')
-print(basketball_team)
+print(basketball_team)  # 下车的学生从连球队中消失了
 # ['Sue', 'Maya', 'Diana']
+
+"""
+TwlightBus 违反了设计皆苦的最佳实践，即“最少惊讶原则”。学生从校车中下车后，他的名字就从篮球名单中消失了，这确实让人惊讶
+
+这里的问题是，校车为传给构造方法的列表创建了别名。正确的做法很简单：在__init__中，传入 passengers 参数时，应该把参数值的副本赋值给 self.passengers
+如下
+
+def __init__(self,passengers=None):
+    if passengers is None:
+        self.passengers = []
+    else:
+        self.passengers = list(passengers) # 创建 passengers 列表副本，如果不是列表，就把它转换成列表
+
+"""
+
+"""
+除非这个方法确实想修改通过参数传入的对象，否则在类中直接把参数赋值给实例变量之前一定要三思，因为这样会为参数对象创建别名。
+如果不确定，那就创建副本。
+
+"""
+
+# 8.5 del和垃圾回收
+
+"""
+del 语句删除名称，而不是对象。del 命令可能会导致对象被当做垃圾回收，但是仅当删除的变量保存的是对象的最后一个引用，或者无法得到对象时。
+重新绑定也可能会导致对象的引用数量归零，导致对象被销毁
+"""
+
+
+# 8.6 弱引用
+"""
+正是因为有引用，对象才会在内存中存在。当对象的引用数量归零后，垃圾回收程序会把对象销毁。但是，有时需要引用对象，而不让
+对象存在的时间超过所需时间。这经常在缓存中。
+
+
+弱引用不会增加对象的引用数量。引用的对象称为所指对象。因此，我们说，弱引用不会妨碍所指对象被当做垃圾回收。
+
+弱引用在缓存中很有用，因为我们不想仅因为被缓存引用着而始终保存缓存对象。
+
+"""
+
+
+
+
+# 8.8 本章小结
+
+"""
+每个Python对象都有标识、类型和值。只有对象的值会不时变化
+
+
+如果两个变量指代的不可变对象具有相同的值（a==b 为True），实际上它们指代的是副本还是同一个对象的别名基本上没有什么关系，因为不可变对象的值不会
+变，但是有一个例外。这里说的例外是不可变的集合，如元组 frozenset：如果不可变集合保存的是可变元素的引用，那么可变元素的值发生变化之后，不可变集合
+也会随之改变。实际上这种情况不是很常见。不可变集合不变的是所含对象的标识。
+
+
+变量保存的是引用，这一点对 Python 编程有很多实际的影响
+
+- 简单的赋值不创建副本
+- 对 += 或 *= 所做的增量赋值来说，如果左边的变量绑定的是不可变对象，会创建新对象；如果是可变对象，会就地修改。
+- 为现有的变量赋予新值，不会修改之前绑定的变量。这叫重新绑定：现在变量绑定了其他对象。如果变量是之前那个对象的最后一个引用，对象会被当做垃圾回收
+- 函数的参数以别名的形式传递，这意味着，函数可能会修改通过参数传入的可变对象。这一行为无法避免，除非在本地创建副本，或者使用不可变对象（例如，传入元组，而不是传入列表）
+- 使用可变类型作为函数参数的默认值有危险，因为如果就地修改了参数，默认值也就改变了，这会影响以后使用默认值的调用
+
+
+
+"""
+
+
+
+
+
+
