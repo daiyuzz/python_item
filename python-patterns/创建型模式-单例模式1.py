@@ -64,6 +64,13 @@ def main():
     print('rm2: {0}'.format(rm2))
     # rm2: Running
 
+    print(rm1.__dict__)
+    print(rm2.__dict__)
+    print(rm3.__dict__)
+    print(rm4.__dict__)
+    # {'state': 'Running'}
+
+
 
 if __name__ == '__main__':
     main()
