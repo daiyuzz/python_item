@@ -190,3 +190,26 @@ def large_order_promo(order):
         return order.total() * .07
     return 0
 
+
+joe = Customer('John Doe', 0)
+ann = Customer('Ann Smith', 1100)
+
+cart = [LineItem('banana', 4, .5),
+        LineItem('apple', 10, .5),
+        LineItem('watermellon', 5, 1.5)]
+
+print(Order(joe, cart, fidelity_promo))
+
+# 没必要在新建订单时实例化新的促销对象，函数拿来即用
+
+
+"-==========================================================================================="
+
+# 6.1.3 选择最佳策略：简单的方式
+"""
+我们继续使用上述中的顾客和购物车，在此基础地上添加3个测试
+
+"""
+
+
+
