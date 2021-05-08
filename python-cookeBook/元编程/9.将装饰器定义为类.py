@@ -58,3 +58,12 @@ print(s.bar(3))
 
 print(Spam.bar.ncalls)
 # 3
+
+
+s = Spam()
+def  grok(self,x):
+    pass
+
+print(grok.__get__(s,Spam))
+# <bound method grok of <__main__.Spam object at 0x7fc765c26ca0>>
+
