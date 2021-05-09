@@ -61,9 +61,33 @@ print(Spam.bar.ncalls)
 
 
 s = Spam()
-def  grok(self,x):
+
+
+def grok(self, x):
     pass
 
-print(grok.__get__(s,Spam))
+
+print(grok.__get__(s, Spam))
 # <bound method grok of <__main__.Spam object at 0x7fc765c26ca0>>
 
+
+import types
+from functools import wraps
+
+
+def profiled(func):
+    ncalls = 0
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        nonlocal ncalls
+        ncalls += 1
+        return func(*args, **kwargs)
+
+    wrapper.ncalls = lambda: ncalls
+    return wrapper
+
+
+@profiled
+def add(x, y):
+    return x + y
