@@ -126,11 +126,29 @@ class orderBuilder():
     def build(self):
         return order(self)
 
+
+# Director类
+class orderDirector():
+    order_builder = ''
+
+    def __init__(self, order_builder):
+        self.order_builder = order_builder
+
+    def createOrder(self, burger, snack, beverage):
+        self.order_builder.addBurger(burger)
+        self.order_builder.addSnack(snack)
+        self.order_builder.addBeverage(beverage)
+        return self.order_builder.build()
+
+
 # 在场景中如下去实现订单的生成
 if __name__ == '__main__':
-    order_builder = orderBuilder()
-    order_builder.addBurger(spicyChickenBurger())
-    order_builder.addSnack(chips())
-    order_builder.addBeverage(milk())
-    order_1 = order_builder.build()
+    # order_builder = orderBuilder()
+    # order_builder.addBurger(spicyChickenBurger())
+    # order_builder.addSnack(chips())
+    # order_builder.addBeverage(milk())
+    # order_1 = order_builder.build()
+    # order_1.show()
+    order_director = orderDirector(orderBuilder())
+    order_1 = order_director.createOrder(spicyChickenBurger(),chips(),milk())
     order_1.show()
