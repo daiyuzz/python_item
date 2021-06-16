@@ -81,7 +81,7 @@ class whiteInfoServerProxy(infoServerProxy):
         self.white_list = []
 
 
-if __name__ == '__main__':
+if __name__ == 'jav__main__':
     info_struct = dict()
     info_struct["addr"] = 10010
     info_struct["content"] = "Hello World!"
